@@ -9,7 +9,7 @@ function highlightOnMap(dataIndex) {
 
 async function initMap() {
     try {
-        const response = await fetch('https://geo.datav.aliyun.com/areas_v3/bound/100000_full.json');
+        const response = await fetch('https://fastly.jsdelivr.net/npm/echarts@4.9.0/map/json/china.json');
         const chinaJson = await response.json();
 
         echarts.registerMap('china', chinaJson);
