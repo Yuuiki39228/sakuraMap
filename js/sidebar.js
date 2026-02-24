@@ -1,4 +1,4 @@
-let isSidebarCollapsed = false; // 默认展开
+let isSidebarCollapsed = false;
 
 function toggleSidebar() {
     const sidebar = document.getElementById('sidebar');
@@ -21,20 +21,20 @@ function updateSidebarState() {
     if (isSidebarCollapsed) {
         sidebar.classList.add('sidebar-collapsed');
         btnContainer.classList.add('collapsed');
+        bottomBar.classList.add('sidebar-collapsed');
         
         if (isMobile) {
             bottomBar.style.bottom = '1rem';
-            bottomBar.classList.add('sidebar-collapsed');
         } else {
             bottomBar.style.right = '24px';
         }
     } else {
         sidebar.classList.remove('sidebar-collapsed');
         btnContainer.classList.remove('collapsed');
+        bottomBar.classList.remove('sidebar-collapsed');
         
         if (isMobile) {
             bottomBar.style.bottom = 'calc(45vh + 1rem)';
-            bottomBar.classList.remove('sidebar-collapsed');
         } else {
             bottomBar.style.right = 'calc(320px + 48px)';
         }
@@ -48,23 +48,34 @@ function generateLocationList() {
         return;
     }
     
+    // 清空并重新生成
     listContainer.innerHTML = '';
+
+    if (!CONFIG.locations || CONFIG.locations.length === 0) {
+        console.error('No locations data');
+        return;
+    }
 
     CONFIG.locations.forEach((loc, index) => {
         const item = document.createElement('div');
+        // 确保每个项目都有明确的高度
+        item.style.cssText = 'flex-shrink: 0; margin-bottom: 0.5rem;';
         item.className = 'group flex items-center gap-3 p-3 rounded-lg hover:bg-slate-800/50 transition-all cursor-pointer border border-transparent hover:border-slate-700';
+        
+        const screenLocations = loc.screenLocations ? loc.screenLocations.join(', ') : '';
+        
         item.innerHTML = `
-            <div class="relative flex-shrink-0">
+            <div class="relative flex-shrink-0" style="width: 12px; height: 12px;">
                 <div class="w-3 h-3 bg-white rounded-full shadow-[0_0_8px_rgba(255,255,255,0.8)]"></div>
                 <div class="absolute inset-0 w-3 h-3 bg-white rounded-full animate-ping opacity-75"></div>
             </div>
-            <div class="flex-1 min-w-0">
+            <div class="flex-1 min-w-0" style="min-width: 0;">
                 <div class="flex justify-between items-center mb-1">
-                    <span class="font-medium text-white group-hover:text-blue-300 transition-colors truncate">${loc.name}</span>
-                    <span class="text-xs px-2 py-0.5 rounded-full bg-blue-500/20 text-blue-300 border border-blue-500/30 flex-shrink-0">${loc.screenCount}屏</span>
+                    <span class="font-medium text-white group-hover:text-blue-300 transition-colors truncate" style="font-size: 0.9rem;">${loc.name}</span>
+                    <span class="text-xs px-2 py-0.5 rounded-full bg-blue-500/20 text-blue-300 border border-blue-500/30 flex-shrink-0" style="margin-left: 0.5rem;">${loc.screenCount}屏</span>
                 </div>
-                <div class="text-xs text-slate-400 truncate">${loc.address}</div>
-                <div class="text-[10px] text-slate-500 mt-1">${loc.playTime} · ${loc.frequency}</div>
+                <div class="text-xs text-slate-400 truncate" style="font-size: 0.75rem;">${loc.address}</div>
+                <div class="text-xs text-slate-500 mt-1" style="font-size: 0.65rem;">${loc.playTime} · ${loc.frequency}</div>
             </div>
         `;
 
@@ -75,7 +86,6 @@ function generateLocationList() {
                 window.myChart.setOption({ geo: { center: loc.value, zoom: 2 } });
             }
             
-            // 移动端点击后自动收起侧边栏
             if (window.innerWidth <= 1024 && !isSidebarCollapsed) {
                 toggleSidebar();
             }
@@ -85,6 +95,13 @@ function generateLocationList() {
     });
     
     console.log(`Generated ${CONFIG.locations.length} location items`);
+    
+    // 强制刷新列表容器高度
+    setTimeout(() => {
+        listContainer.style.display = 'none';
+        listContainer.offsetHeight; // 触发重绘
+        listContainer.style.display = '';
+    }, 100);
 }
 
 function updateStats() {
@@ -107,12 +124,10 @@ function updateStats() {
     if (updateTimeEl) updateTimeEl.textContent = now.toLocaleTimeString('zh-CN', { hour: '2-digit', minute: '2-digit' });
 }
 
-// 初始化侧边栏状态
 function initSidebar() {
     const sidebar = document.getElementById('sidebar');
     if (!sidebar) return;
     
-    // 默认展开
     isSidebarCollapsed = false;
     updateSidebarState();
 }
@@ -121,14 +136,12 @@ window.addEventListener('resize', () => {
     updateSidebarState();
 });
 
-// 触摸滑动支持
 let touchStartY = 0;
 let touchEndY = 0;
 
 document.addEventListener('DOMContentLoaded', () => {
     const sidebar = document.getElementById('sidebar');
     
-    // 初始化
     initSidebar();
     
     if (sidebar) {
@@ -149,7 +162,6 @@ function handleSwipe() {
     const swipeThreshold = 50;
     const diff = touchEndY - touchStartY;
     
-    // 向下滑动收起
     if (diff > swipeThreshold && !isSidebarCollapsed) {
         toggleSidebar();
     }

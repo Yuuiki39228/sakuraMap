@@ -51,6 +51,12 @@ body {
     50% { opacity: 1; }
 }
 
+/* 脉冲动画 */
+@keyframes pulse {
+    0%, 100% { opacity: 1; }
+    50% { opacity: 0.5; }
+}
+
 .loading-overlay {
     position: fixed;
     top: 0;
@@ -115,12 +121,13 @@ body {
         top: 96px;
         bottom: 96px;
         width: 320px;
-        display: block;
+        display: flex;
+        flex-direction: column;
         opacity: 1;
         pointer-events: auto;
         transform: none;
         transition: transform 0.3s ease, opacity 0.3s ease;
-        overflow-y: auto;
+        overflow: hidden;
         border-radius: 1rem;
         padding: 1.5rem;
     }
@@ -149,6 +156,9 @@ body {
         left: 24px;
         z-index: 10;
         transition: right 0.3s ease;
+        width: auto;
+        max-width: 300px;
+        padding: 1rem;
     }
 
     #bottom-bar.sidebar-collapsed {
@@ -180,7 +190,7 @@ body {
         font-size: 0.75rem;
     }
     
-    /* 移动端侧边栏 - 底部抽屉，默认展开 */
+    /* 移动端侧边栏 - 底部抽屉 */
     #sidebar {
         position: fixed;
         left: 0;
@@ -192,7 +202,7 @@ body {
         max-height: 400px;
         min-height: 300px;
         border-radius: 1rem 1rem 0 0;
-        transform: translateY(0); /* 默认展开 */
+        transform: translateY(0);
         opacity: 1;
         pointer-events: auto;
         z-index: 40;
@@ -204,9 +214,9 @@ body {
         backdrop-filter: blur(20px);
         border: 1px solid rgba(255, 255, 255, 0.1);
         border-bottom: none;
+        overflow: hidden;
     }
     
-    /* 收起状态 */
     #sidebar.sidebar-collapsed {
         transform: translateY(100%);
         opacity: 1;
@@ -226,14 +236,25 @@ body {
         border-radius: 2px;
     }
     
-    /* 列表区域 */
+    /* 列表区域 - 关键修复 */
     #location-list {
         flex: 1;
         overflow-y: auto;
         overflow-x: hidden;
+        min-height: 0;
         max-height: none;
-        margin-top: 0.5rem;
         padding-right: 0.25rem;
+        -webkit-overflow-scrolling: touch;
+    }
+    
+    /* 列表项样式 */
+    #location-list > div {
+        flex-shrink: 0;
+        margin-bottom: 0.5rem;
+    }
+    
+    #location-list > div:last-child {
+        margin-bottom: 0;
     }
     
     /* 切换按钮 */
@@ -278,17 +299,17 @@ body {
         transform: rotate(180deg);
     }
     
-    /* 底部状态栏 */
+    /* 底部状态栏 - 关键修复 */
     #bottom-bar {
-        position: absolute;
+        position: fixed;
         bottom: calc(45vh + 1rem);
         left: 1rem;
-        right: auto;
-        width: auto;
-        max-width: calc(100% - 5rem);
         z-index: 10;
         transition: bottom 0.3s ease;
-        padding: 0.75rem;
+        padding: 0.75rem 1rem;
+        width: auto;
+        max-width: calc(100% - 6rem);
+        display: block;
     }
     
     #bottom-bar.sidebar-collapsed {
@@ -345,6 +366,7 @@ body {
         bottom: calc(50vh + 0.75rem);
         font-size: 0.75rem;
         padding: 0.5rem 0.75rem;
+        max-width: calc(100% - 5rem);
     }
     
     #location-list > div {
@@ -358,10 +380,6 @@ body {
     
     #modal-screen-locations {
         max-height: 150px;
-    }
-    
-    #bottom-bar span {
-        font-size: 0.7rem;
     }
     
     .echarts-tooltip {
