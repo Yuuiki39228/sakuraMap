@@ -51,7 +51,6 @@ body {
     50% { opacity: 1; }
 }
 
-/* 脉冲动画 */
 @keyframes pulse {
     0%, 100% { opacity: 1; }
     50% { opacity: 0.5; }
@@ -190,7 +189,7 @@ body {
         font-size: 0.75rem;
     }
     
-    /* 移动端侧边栏 - 底部抽屉 */
+    /* 移动端侧边栏 - 增加高度以显示更多内容 */
     #sidebar {
         position: fixed;
         left: 0;
@@ -198,9 +197,9 @@ body {
         top: auto;
         bottom: 0;
         width: 100%;
-        height: 45vh;
-        max-height: 400px;
-        min-height: 300px;
+        height: 65vh; /* 从45vh增加到65vh */
+        max-height: 550px; /* 增加最大高度 */
+        min-height: 400px; /* 增加最小高度 */
         border-radius: 1rem 1rem 0 0;
         transform: translateY(0);
         opacity: 1;
@@ -236,7 +235,20 @@ body {
         border-radius: 2px;
     }
     
-    /* 列表区域 - 关键修复 */
+    /* 统计区域压缩一些空间 */
+    #sidebar > div:first-child {
+        flex-shrink: 0;
+        margin-bottom: 1rem;
+        padding-bottom: 0.75rem;
+    }
+    
+    /* 标题区域 */
+    #sidebar > div:nth-child(2) {
+        flex-shrink: 0;
+        margin-bottom: 0.75rem;
+    }
+    
+    /* 列表区域 - 增大可用空间 */
     #location-list {
         flex: 1;
         overflow-y: auto;
@@ -247,22 +259,23 @@ body {
         -webkit-overflow-scrolling: touch;
     }
     
-    /* 列表项样式 */
+    /* 列表项样式 - 紧凑一点以显示更多 */
     #location-list > div {
         flex-shrink: 0;
-        margin-bottom: 0.5rem;
+        margin-bottom: 0.4rem;
+        padding: 0.6rem 0.75rem;
     }
     
     #location-list > div:last-child {
         margin-bottom: 0;
     }
     
-    /* 切换按钮 */
+    /* 切换按钮 - 调整位置 */
     #toggle-btn-container {
         position: fixed;
         right: 1rem;
         top: auto;
-        bottom: calc(45vh + 1rem);
+        bottom: calc(65vh + 1rem); /* 跟随侧边栏高度 */
         z-index: 50;
         transition: bottom 0.3s ease;
     }
@@ -299,10 +312,10 @@ body {
         transform: rotate(180deg);
     }
     
-    /* 底部状态栏 - 关键修复 */
+    /* 底部状态栏 - 调整位置 */
     #bottom-bar {
         position: fixed;
-        bottom: calc(45vh + 1rem);
+        bottom: calc(65vh + 1rem); /* 跟随侧边栏高度 */
         left: 1rem;
         z-index: 10;
         transition: bottom 0.3s ease;
@@ -353,24 +366,25 @@ body {
     }
     
     #sidebar {
-        height: 50vh;
-        max-height: 350px;
-        min-height: 250px;
+        height: 70vh; /* 小屏更高一些 */
+        max-height: 500px;
+        min-height: 350px;
     }
     
     #toggle-btn-container {
-        bottom: calc(50vh + 0.75rem);
+        bottom: calc(70vh + 0.75rem);
     }
     
     #bottom-bar {
-        bottom: calc(50vh + 0.75rem);
+        bottom: calc(70vh + 0.75rem);
         font-size: 0.75rem;
         padding: 0.5rem 0.75rem;
         max-width: calc(100% - 5rem);
     }
     
     #location-list > div {
-        padding: 0.75rem;
+        padding: 0.5rem 0.75rem;
+        margin-bottom: 0.3rem;
     }
     
     #info-modal {
@@ -390,8 +404,13 @@ body {
 /* ========== 横屏模式 ========== */
 @media (max-height: 500px) and (orientation: landscape) {
     #sidebar {
-        height: 60vh;
+        height: 75vh;
         max-height: none;
+    }
+    
+    #toggle-btn-container,
+    #bottom-bar {
+        bottom: calc(75vh + 0.5rem);
     }
 }
 
@@ -403,7 +422,7 @@ body {
     }
     
     #location-list > div {
-        min-height: 60px;
+        min-height: 50px;
     }
     
     .group:hover {

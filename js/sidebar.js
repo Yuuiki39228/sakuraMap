@@ -17,6 +17,8 @@ function updateSidebarState() {
     if (!sidebar || !btnContainer || !bottomBar) return;
 
     const isMobile = window.innerWidth <= 1024;
+    // 根据屏幕尺寸调整高度
+    const sidebarHeight = window.innerWidth <= 640 ? '70vh' : '65vh';
 
     if (isSidebarCollapsed) {
         sidebar.classList.add('sidebar-collapsed');
@@ -25,6 +27,7 @@ function updateSidebarState() {
         
         if (isMobile) {
             bottomBar.style.bottom = '1rem';
+            btnContainer.style.bottom = '1rem';
         } else {
             bottomBar.style.right = '24px';
         }
@@ -34,7 +37,8 @@ function updateSidebarState() {
         bottomBar.classList.remove('sidebar-collapsed');
         
         if (isMobile) {
-            bottomBar.style.bottom = 'calc(45vh + 1rem)';
+            bottomBar.style.bottom = `calc(${sidebarHeight} + 1rem)`;
+            btnContainer.style.bottom = `calc(${sidebarHeight} + 1rem)`;
         } else {
             bottomBar.style.right = 'calc(320px + 48px)';
         }
@@ -48,7 +52,6 @@ function generateLocationList() {
         return;
     }
     
-    // 清空并重新生成
     listContainer.innerHTML = '';
 
     if (!CONFIG.locations || CONFIG.locations.length === 0) {
@@ -58,11 +61,14 @@ function generateLocationList() {
 
     CONFIG.locations.forEach((loc, index) => {
         const item = document.createElement('div');
-        // 确保每个项目都有明确的高度
-        item.style.cssText = 'flex-shrink: 0; margin-bottom: 0.5rem;';
-        item.className = 'group flex items-center gap-3 p-3 rounded-lg hover:bg-slate-800/50 transition-all cursor-pointer border border-transparent hover:border-slate-700';
-        
-        const screenLocations = loc.screenLocations ? loc.screenLocations.join(', ') : '';
+        item.style.cssText = 'flex-shrink: 0; margin-bottom: 0.4rem;';
+        item.className = 'group flex items-center gap-3 rounded-lg hover:bg-slate-800/50 transition-all cursor-pointer border border-transparent hover:border-slate-700';
+        // 移动端更紧凑的内边距
+        if (window.innerWidth <= 640) {
+            item.style.padding = '0.5rem 0.75rem';
+        } else {
+            item.style.padding = '0.6rem 0.75rem';
+        }
         
         item.innerHTML = `
             <div class="relative flex-shrink-0" style="width: 12px; height: 12px;">
@@ -70,12 +76,12 @@ function generateLocationList() {
                 <div class="absolute inset-0 w-3 h-3 bg-white rounded-full animate-ping opacity-75"></div>
             </div>
             <div class="flex-1 min-w-0" style="min-width: 0;">
-                <div class="flex justify-between items-center mb-1">
+                <div class="flex justify-between items-center mb-0.5">
                     <span class="font-medium text-white group-hover:text-blue-300 transition-colors truncate" style="font-size: 0.9rem;">${loc.name}</span>
                     <span class="text-xs px-2 py-0.5 rounded-full bg-blue-500/20 text-blue-300 border border-blue-500/30 flex-shrink-0" style="margin-left: 0.5rem;">${loc.screenCount}屏</span>
                 </div>
-                <div class="text-xs text-slate-400 truncate" style="font-size: 0.75rem;">${loc.address}</div>
-                <div class="text-xs text-slate-500 mt-1" style="font-size: 0.65rem;">${loc.playTime} · ${loc.frequency}</div>
+                <div class="text-xs text-slate-400 truncate" style="font-size: 0.75rem; line-height: 1.2;">${loc.address}</div>
+                <div class="text-xs text-slate-500 mt-0.5" style="font-size: 0.65rem;">${loc.playTime} · ${loc.frequency}</div>
             </div>
         `;
 
@@ -95,13 +101,6 @@ function generateLocationList() {
     });
     
     console.log(`Generated ${CONFIG.locations.length} location items`);
-    
-    // 强制刷新列表容器高度
-    setTimeout(() => {
-        listContainer.style.display = 'none';
-        listContainer.offsetHeight; // 触发重绘
-        listContainer.style.display = '';
-    }, 100);
 }
 
 function updateStats() {
