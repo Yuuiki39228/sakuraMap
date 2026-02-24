@@ -224,7 +224,7 @@ const CONFIG = {
                         address: "漳州市芗城区南昌中路39号",
                         value: [117.671589, 24.510646],
                         screenCount: 2,
-                        screenLocations: ["中庭"],
+                        screenLocations: ["中庭竖屏","电梯屏"],
                         playTime: "10:00-22:00",
                         frequency: "4~5min"
                     },
@@ -556,7 +556,7 @@ const CONFIG = {
                         name: "株洲大汉悦中心",
                         address: "株洲市芦淞区七一路229号",
                         value: [113.149145, 27.837958],
-                        screenCount: 1,
+                        screenCount: 2,
                         screenLocations: ["外广场", "中庭广场"],
                         playTime: "外广场:下午17点-22点，中庭广场:14点-22点",
                         frequency: "NULL"
@@ -584,7 +584,7 @@ const CONFIG = {
                         address: "苏州长江路18号",
                         value: [120.552736, 31.259687],
                         screenCount: 4,
-                        screenLocations: ["商场1楼北厅", "南厅", "商场5楼圆弧厅"],
+                        screenLocations: ["一楼舞台LED", "山姆旁正门口柱面屏*2", "商场5楼圆弧厅"],
                         playTime: "10:00-17:00",
                         frequency: "2min/次"
                     },

@@ -1,5 +1,11 @@
 @import url('https://fonts.googleapis.com/css2?family=Noto+Sans+SC:wght@300;400;500;700&display=swap');
 
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+}
+
 body {
     font-family: 'Noto Sans SC', sans-serif;
     background: #0f172a;
@@ -101,54 +107,334 @@ body {
     border: 1px solid rgba(255, 255, 255, 0.05);
 }
 
-/* �����������ʽ */
-.sidebar-collapsed {
-    transform: translateX(calc(100% + 24px));
-    opacity: 0;
-    pointer-events: none;
+/* ========== PC端样式（大于1024px） ========== */
+@media (min-width: 1025px) {
+    #sidebar {
+        position: absolute;
+        right: 24px;
+        top: 96px;
+        bottom: 96px;
+        width: 320px;
+        display: block;
+        opacity: 1;
+        pointer-events: auto;
+        transform: none;
+        transition: transform 0.3s ease, opacity 0.3s ease;
+        overflow-y: auto;
+        border-radius: 1rem;
+        padding: 1.5rem;
+    }
+
+    #sidebar.sidebar-collapsed {
+        transform: translateX(calc(100% + 24px));
+        opacity: 0;
+        pointer-events: none;
+    }
+
+    #toggle-btn-container {
+        position: fixed;
+        right: 24px;
+        top: 60px;
+        z-index: 50;
+        transition: right 0.3s ease;
+    }
+
+    #toggle-btn-container.collapsed {
+        right: 24px;
+    }
+
+    #bottom-bar {
+        position: absolute;
+        bottom: 24px;
+        left: 24px;
+        z-index: 10;
+        transition: right 0.3s ease;
+    }
+
+    #bottom-bar.sidebar-collapsed {
+        right: 24px;
+    }
+
+    #bottom-bar:not(.sidebar-collapsed) {
+        right: calc(320px + 48px);
+    }
 }
 
-/* ������ť���� */
-#toggle-btn-container {
-    position: fixed;
-    right: 24px;
-    top: 60px;
-    z-index: 50;
-    transition: right 0.3s ease;
+/* ========== 移动端样式（小于等于1024px） ========== */
+@media (max-width: 1024px) {
+    .map-container {
+        height: 100vh;
+        height: 100dvh;
+    }
+    
+    .absolute.top-0.left-0.w-full.p-6 {
+        padding: 1rem;
+    }
+    
+    .absolute.top-0 h1 {
+        font-size: 1.25rem;
+        line-height: 1.4;
+    }
+    
+    .absolute.top-0 p {
+        font-size: 0.75rem;
+    }
+    
+    /* 移动端侧边栏 - 底部抽屉，默认展开 */
+    #sidebar {
+        position: fixed;
+        left: 0;
+        right: 0;
+        top: auto;
+        bottom: 0;
+        width: 100%;
+        height: 45vh;
+        max-height: 400px;
+        min-height: 300px;
+        border-radius: 1rem 1rem 0 0;
+        transform: translateY(0); /* 默认展开 */
+        opacity: 1;
+        pointer-events: auto;
+        z-index: 40;
+        padding: 1.5rem 1rem 1rem;
+        padding-bottom: calc(1rem + env(safe-area-inset-bottom, 0px));
+        display: flex;
+        flex-direction: column;
+        background: rgba(15, 23, 42, 0.95);
+        backdrop-filter: blur(20px);
+        border: 1px solid rgba(255, 255, 255, 0.1);
+        border-bottom: none;
+    }
+    
+    /* 收起状态 */
+    #sidebar.sidebar-collapsed {
+        transform: translateY(100%);
+        opacity: 1;
+        pointer-events: none;
+    }
+    
+    /* 拖动指示条 */
+    #sidebar::before {
+        content: '';
+        position: absolute;
+        top: 0.5rem;
+        left: 50%;
+        transform: translateX(-50%);
+        width: 40px;
+        height: 4px;
+        background: rgba(255, 255, 255, 0.3);
+        border-radius: 2px;
+    }
+    
+    /* 列表区域 */
+    #location-list {
+        flex: 1;
+        overflow-y: auto;
+        overflow-x: hidden;
+        max-height: none;
+        margin-top: 0.5rem;
+        padding-right: 0.25rem;
+    }
+    
+    /* 切换按钮 */
+    #toggle-btn-container {
+        position: fixed;
+        right: 1rem;
+        top: auto;
+        bottom: calc(45vh + 1rem);
+        z-index: 50;
+        transition: bottom 0.3s ease;
+    }
+    
+    #toggle-btn-container.collapsed {
+        bottom: 1rem;
+    }
+
+    #toggle-btn {
+        width: 40px;
+        height: 40px;
+        background: rgba(30, 41, 59, 0.9);
+        backdrop-filter: blur(10px);
+        border: 1px solid rgba(255, 255, 255, 0.1);
+        border-radius: 8px;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        cursor: pointer;
+        transition: all 0.3s ease;
+        color: white;
+    }
+
+    #toggle-btn:hover {
+        background: rgba(51, 65, 85, 0.9);
+    }
+
+    #toggle-icon {
+        transition: transform 0.3s ease;
+    }
+
+    .sidebar-collapsed ~ #toggle-btn-container #toggle-icon,
+    #toggle-btn-container.collapsed #toggle-icon {
+        transform: rotate(180deg);
+    }
+    
+    /* 底部状态栏 */
+    #bottom-bar {
+        position: absolute;
+        bottom: calc(45vh + 1rem);
+        left: 1rem;
+        right: auto;
+        width: auto;
+        max-width: calc(100% - 5rem);
+        z-index: 10;
+        transition: bottom 0.3s ease;
+        padding: 0.75rem;
+    }
+    
+    #bottom-bar.sidebar-collapsed {
+        bottom: 1rem;
+    }
+    
+    /* 弹窗调整 */
+    #info-modal {
+        width: 90vw;
+        max-width: 400px;
+        max-height: 70vh;
+        padding: 1rem;
+    }
+    
+    .info-modal {
+        padding: 1.25rem;
+    }
+    
+    #modal-mall-name {
+        font-size: 1.125rem;
+    }
+    
+    .grid.grid-cols-3 {
+        grid-template-columns: repeat(3, 1fr);
+        gap: 0.5rem;
+    }
+    
+    .stat-card {
+        padding: 0.75rem 0.5rem;
+    }
+    
+    .stat-card .text-lg {
+        font-size: 1rem;
+    }
 }
 
-.sidebar-collapsed ~ #toggle-btn-container,
-#toggle-btn-container.collapsed {
-    right: 24px;
+/* ========== 小屏手机适配 ========== */
+@media (max-width: 640px) {
+    .absolute.top-0 h1 {
+        font-size: 1.1rem;
+    }
+    
+    #sidebar {
+        height: 50vh;
+        max-height: 350px;
+        min-height: 250px;
+    }
+    
+    #toggle-btn-container {
+        bottom: calc(50vh + 0.75rem);
+    }
+    
+    #bottom-bar {
+        bottom: calc(50vh + 0.75rem);
+        font-size: 0.75rem;
+        padding: 0.5rem 0.75rem;
+    }
+    
+    #location-list > div {
+        padding: 0.75rem;
+    }
+    
+    #info-modal {
+        width: 92vw;
+        max-height: 75vh;
+    }
+    
+    #modal-screen-locations {
+        max-height: 150px;
+    }
+    
+    #bottom-bar span {
+        font-size: 0.7rem;
+    }
+    
+    .echarts-tooltip {
+        font-size: 0.75rem !important;
+    }
 }
 
-#toggle-btn {
-    width: 32px;
-    height: 32px;
-    background: rgba(30, 41, 59, 0.9);
-    backdrop-filter: blur(10px);
-    border: 1px solid rgba(255, 255, 255, 0.1);
-    border-radius: 8px;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    cursor: pointer;
-    transition: all 0.3s ease;
+/* ========== 横屏模式 ========== */
+@media (max-height: 500px) and (orientation: landscape) {
+    #sidebar {
+        height: 60vh;
+        max-height: none;
+    }
 }
 
-#toggle-btn:hover {
-    background: rgba(51, 65, 85, 0.9);
+/* ========== 触摸设备优化 ========== */
+@media (pointer: coarse) {
+    #toggle-btn {
+        width: 44px;
+        height: 44px;
+    }
+    
+    #location-list > div {
+        min-height: 60px;
+    }
+    
+    .group:hover {
+        background: transparent;
+    }
+    
+    .group:active {
+        background: rgba(51, 65, 85, 0.8);
+    }
+    
+    button[onclick="closeModal()"] {
+        padding: 0.5rem;
+        top: 0.5rem;
+        right: 0.5rem;
+    }
 }
 
-#toggle-icon {
-    transition: transform 0.3s ease;
+/* ========== iOS优化 ========== */
+@supports (-webkit-touch-callout: none) {
+    body {
+        position: fixed;
+        width: 100%;
+        height: 100%;
+    }
+    
+    .map-container {
+        height: 100%;
+    }
 }
 
-.sidebar-collapsed ~ #toggle-btn-container #toggle-icon,
-#toggle-btn-container.collapsed #toggle-icon {
-    transform: rotate(180deg);
+/* ========== 滚动条美化 ========== */
+#sidebar::-webkit-scrollbar {
+    width: 4px;
 }
 
-#sidebar.sidebar-collapsed #toggle-btn {
-    transform: translateX(-40px);
+#sidebar::-webkit-scrollbar-track {
+    background: transparent;
+}
+
+#sidebar::-webkit-scrollbar-thumb {
+    background: rgba(255, 255, 255, 0.2);
+    border-radius: 2px;
+}
+
+#location-list::-webkit-scrollbar {
+    width: 4px;
+}
+
+#location-list::-webkit-scrollbar-thumb {
+    background: rgba(255, 255, 255, 0.15);
+    border-radius: 2px;
 }
