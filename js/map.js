@@ -1,4 +1,5 @@
 let myChart = null;
+let isClickProcessing = false;
 
 function highlightOnMap(dataIndex) {
     if (!myChart) return;
@@ -183,8 +184,35 @@ async function initMap() {
             }
         });
 
-        myChart.on('click', function (params) {
+        // 点击事件 - 使用 mousedown 避免移动端冒泡
+        myChart.on('mousedown', function (params) {
+            if (isClickProcessing) return;
+            isClickProcessing = true;
+            
+            setTimeout(() => {
+                isClickProcessing = false;
+            }, 300);
+            
             if (params.componentType === 'series' && params.data) {
+                console.log('Map clicked:', params.data.name);
+                if (typeof showLocationInfo === 'function') {
+                    showLocationInfo(params.data);
+                }
+                highlightOnMap(params.dataIndex);
+            }
+        });
+        
+        // 移动端触摸事件
+        myChart.on('touchstart', function (params) {
+            if (isClickProcessing) return;
+            isClickProcessing = true;
+            
+            setTimeout(() => {
+                isClickProcessing = false;
+            }, 300);
+            
+            if (params.componentType === 'series' && params.data) {
+                console.log('Map touched:', params.data.name);
                 if (typeof showLocationInfo === 'function') {
                     showLocationInfo(params.data);
                 }
@@ -192,6 +220,7 @@ async function initMap() {
             }
         });
 
+        // 双击放大地图
         let lastClickTime = 0;
         myChart.getZr().on('click', function (params) {
             const currentTime = new Date().getTime();
@@ -209,6 +238,16 @@ async function initMap() {
             }
             lastClickTime = currentTime;
         });
+
+        // 初始检查屏幕尺寸
+        if (window.innerWidth <= 640) {
+            myChart.setOption({
+                geo: {
+                    zoom: 1.0,
+                    center: [105, 36]
+                }
+            });
+        }
 
     } catch (error) {
         console.error('地图加载失败:', error);
