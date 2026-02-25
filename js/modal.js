@@ -1,7 +1,7 @@
 // 弹窗功能
 let currentSelected = null;
 let isModalOpen = false;
-let overlayClickEnabled = false; // 新增：控制遮罩层点击是否可用
+let overlayClickEnabled = false;
 
 function showLocationInfo(data) {
     // 防止重复打开
@@ -17,7 +17,6 @@ function showLocationInfo(data) {
 
     // 设置标志位
     isModalOpen = true;
-    // 禁用遮罩层点击，防止事件穿透导致立即关闭
     overlayClickEnabled = false;
 
     const nameEl = document.getElementById('modal-mall-name');
@@ -69,7 +68,7 @@ function showLocationInfo(data) {
 
     console.log('Modal opened for:', data.name);
 
-    // 延迟启用遮罩层点击，防止事件穿透（iOS需要更长延迟）
+    // 延迟启用遮罩层点击，防止事件穿透
     setTimeout(() => {
         overlayClickEnabled = true;
         console.log('Overlay click enabled');
@@ -101,10 +100,50 @@ function closeModal() {
         overlay.classList.add('hidden');
     }
 
+    // 取消 ECharts 的高亮状态
     if (window.myChart) {
         window.myChart.dispatchAction({ type: 'downplay', seriesIndex: 0 });
     }
     currentSelected = null;
+
+    // 关键修复：强制触发 mouseup 事件，解除 ECharts 的拖拽状态
+    setTimeout(() => {
+        if (window.myChart) {
+            // 方法1：通过 zrender 触发 mouseup
+            const zr = window.myChart.getZr();
+            if (zr) {
+                // 创建一个模拟的 mouseup 事件
+                const mouseUpEvent = new MouseEvent('mouseup', {
+                    bubbles: true,
+                    cancelable: true,
+                    view: window
+                });
+                zr.dom.dispatchEvent(mouseUpEvent);
+
+                // 同时触发 mouseleave 确保状态重置
+                const mouseLeaveEvent = new MouseEvent('mouseleave', {
+                    bubbles: true,
+                    cancelable: true,
+                    view: window
+                });
+                zr.dom.dispatchEvent(mouseLeaveEvent);
+            }
+
+            // 方法2：临时禁用 roam，然后恢复
+            const currentOption = window.myChart.getOption();
+            if (currentOption && currentOption.geo && currentOption.geo[0]) {
+                const currentRoam = currentOption.geo[0].roam;
+                window.myChart.setOption({
+                    geo: { roam: false }
+                });
+                setTimeout(() => {
+                    window.myChart.setOption({
+                        geo: { roam: currentRoam }
+                    });
+                }, 100);
+            }
+        }
+    }, 50);
 
     console.log('Modal closed');
 }
@@ -122,9 +161,7 @@ document.addEventListener('DOMContentLoaded', () => {
     const modal = document.getElementById('info-modal');
 
     if (overlay) {
-        // 使用 click 代替 mousedown/touchstart，更可靠
         overlay.addEventListener('click', (e) => {
-            // 只有显式启用后才响应点击
             if (!overlayClickEnabled) {
                 console.log('Overlay click blocked - not enabled yet');
                 return;
@@ -136,12 +173,10 @@ document.addEventListener('DOMContentLoaded', () => {
     }
 
     if (modal) {
-        // 阻止弹窗内部点击冒泡到遮罩层
         modal.addEventListener('click', (e) => {
             e.stopPropagation();
         });
 
-        // 阻止弹窗内部滚轮冒泡
         modal.addEventListener('wheel', (e) => {
             e.stopPropagation();
         }, { passive: true });
@@ -157,7 +192,6 @@ let lastTouchTime = 0;
 document.addEventListener('touchend', (e) => {
     const currentTime = new Date().getTime();
     if (currentTime - lastTouchTime < 300) {
-        // 双击，检查是否在弹窗内部
         const modal = document.getElementById('info-modal');
         if (modal && !modal.classList.contains('hidden')) {
             const isInsideModal = modal.contains(e.target);

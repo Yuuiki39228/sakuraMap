@@ -15,10 +15,10 @@ async function initMap() {
             'https://cdn.jsdelivr.net/npm/echarts@4.9.0/map/json/china.json',
             'https://unpkg.com/echarts@4.9.0/map/json/china.json'
         ];
-        
+
         let chinaJson = null;
         let lastError = null;
-        
+
         for (const url of mapUrls) {
             try {
                 const response = await fetch(url);
@@ -32,18 +32,18 @@ async function initMap() {
                 console.log('Failed to load from', url, e.message);
             }
         }
-        
+
         if (!chinaJson) {
             throw new Error('All map sources failed: ' + (lastError ? lastError.message : 'Unknown error'));
         }
 
         echarts.registerMap('china', chinaJson);
-        
+
         const mapContainer = document.getElementById('china-map');
         if (!mapContainer) {
             throw new Error('Map container not found');
         }
-        
+
         myChart = echarts.init(mapContainer);
         window.myChart = myChart;
 
@@ -184,35 +184,18 @@ async function initMap() {
             }
         });
 
-        // 点击事件 - 使用 mousedown 避免移动端冒泡
-        myChart.on('mousedown', function (params) {
+        // 关键修复：使用 click 事件代替 mousedown/touchstart
+        // 这样不会触发 ECharts 的拖拽状态
+        myChart.on('click', function (params) {
             if (isClickProcessing) return;
             isClickProcessing = true;
-            
+
             setTimeout(() => {
                 isClickProcessing = false;
             }, 300);
-            
+
             if (params.componentType === 'series' && params.data) {
                 console.log('Map clicked:', params.data.name);
-                if (typeof showLocationInfo === 'function') {
-                    showLocationInfo(params.data);
-                }
-                highlightOnMap(params.dataIndex);
-            }
-        });
-        
-        // 移动端触摸事件
-        myChart.on('touchstart', function (params) {
-            if (isClickProcessing) return;
-            isClickProcessing = true;
-            
-            setTimeout(() => {
-                isClickProcessing = false;
-            }, 300);
-            
-            if (params.componentType === 'series' && params.data) {
-                console.log('Map touched:', params.data.name);
                 if (typeof showLocationInfo === 'function') {
                     showLocationInfo(params.data);
                 }
