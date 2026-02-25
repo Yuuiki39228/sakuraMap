@@ -1,14 +1,15 @@
 // 弹窗功能
 let currentSelected = null;
 let isModalOpen = false;
+let overlayClickEnabled = false; // 新增：控制遮罩层点击是否可用
 
 function showLocationInfo(data) {
     // 防止重复打开
     if (isModalOpen) return;
-    
+
     const modal = document.getElementById('info-modal');
     const overlay = document.getElementById('modal-overlay');
-    
+
     if (!modal || !overlay) {
         console.error('Modal elements not found');
         return;
@@ -16,6 +17,8 @@ function showLocationInfo(data) {
 
     // 设置标志位
     isModalOpen = true;
+    // 禁用遮罩层点击，防止事件穿透导致立即关闭
+    overlayClickEnabled = false;
 
     const nameEl = document.getElementById('modal-mall-name');
     const addressEl = document.getElementById('modal-address');
@@ -36,7 +39,7 @@ function showLocationInfo(data) {
         const locations = data.screenLocations || [];
         locations.forEach((location, idx) => {
             if (location === 'NULL') return;
-            
+
             const div = document.createElement('div');
             div.className = 'flex items-center justify-between bg-slate-800/30 rounded-lg p-2.5 border border-slate-700/50';
             div.innerHTML = `
@@ -56,25 +59,35 @@ function showLocationInfo(data) {
     // 显示弹窗
     modal.classList.remove('hidden');
     overlay.classList.remove('hidden');
-    
+
     // 移动端添加滑入动画
     if (window.innerWidth <= 640) {
         modal.style.animation = 'modalSlideUp 0.3s ease-out';
     }
-    
+
     currentSelected = data;
-    
+
     console.log('Modal opened for:', data.name);
+
+    // 延迟启用遮罩层点击，防止事件穿透（iOS需要更长延迟）
+    setTimeout(() => {
+        overlayClickEnabled = true;
+        console.log('Overlay click enabled');
+    }, 350);
 }
 
 function closeModal() {
     if (!isModalOpen) return;
-    
+
     const modal = document.getElementById('info-modal');
     const overlay = document.getElementById('modal-overlay');
-    
+
     if (!modal || !overlay) return;
-    
+
+    // 重置标志位
+    isModalOpen = false;
+    overlayClickEnabled = false;
+
     // 移动端添加滑出动画
     if (window.innerWidth <= 640) {
         modal.style.animation = 'modalSlideDown 0.2s ease-in';
@@ -82,19 +95,17 @@ function closeModal() {
             modal.classList.add('hidden');
             overlay.classList.add('hidden');
             modal.style.animation = '';
-            isModalOpen = false;
         }, 200);
     } else {
         modal.classList.add('hidden');
         overlay.classList.add('hidden');
-        isModalOpen = false;
     }
-    
+
     if (window.myChart) {
         window.myChart.dispatchAction({ type: 'downplay', seriesIndex: 0 });
     }
     currentSelected = null;
-    
+
     console.log('Modal closed');
 }
 
@@ -109,38 +120,32 @@ document.addEventListener('keydown', function(e) {
 document.addEventListener('DOMContentLoaded', () => {
     const overlay = document.getElementById('modal-overlay');
     const modal = document.getElementById('info-modal');
-    
+
     if (overlay) {
-        // 使用 mousedown 而不是 click，避免冒泡
-        overlay.addEventListener('mousedown', (e) => {
+        // 使用 click 代替 mousedown/touchstart，更可靠
+        overlay.addEventListener('click', (e) => {
+            // 只有显式启用后才响应点击
+            if (!overlayClickEnabled) {
+                console.log('Overlay click blocked - not enabled yet');
+                return;
+            }
             e.preventDefault();
             e.stopPropagation();
             closeModal();
         });
-        
-        // 移动端触摸事件
-        overlay.addEventListener('touchstart', (e) => {
-            e.preventDefault();
-            e.stopPropagation();
-            closeModal();
-        }, { passive: false });
     }
-    
+
     if (modal) {
-        // 阻止弹窗内部点击冒泡
-        modal.addEventListener('mousedown', (e) => {
+        // 阻止弹窗内部点击冒泡到遮罩层
+        modal.addEventListener('click', (e) => {
             e.stopPropagation();
         });
-        
-        modal.addEventListener('touchstart', (e) => {
-            e.stopPropagation();
-        }, { passive: true });
-        
+
         // 阻止弹窗内部滚轮冒泡
         modal.addEventListener('wheel', (e) => {
             e.stopPropagation();
         }, { passive: true });
-        
+
         modal.addEventListener('scroll', (e) => {
             e.stopPropagation();
         }, { passive: true });
