@@ -13,7 +13,7 @@ function updateSidebarState() {
     const sidebar = document.getElementById('sidebar');
     const btnContainer = document.getElementById('toggle-btn-container');
     const bottomBar = document.getElementById('bottom-bar');
-    
+
     if (!sidebar || !btnContainer || !bottomBar) return;
 
     const isMobile = window.innerWidth <= 1024;
@@ -24,7 +24,7 @@ function updateSidebarState() {
         sidebar.classList.add('sidebar-collapsed');
         btnContainer.classList.add('collapsed');
         bottomBar.classList.add('sidebar-collapsed');
-        
+
         if (isMobile) {
             bottomBar.style.bottom = '1rem';
             btnContainer.style.bottom = '1rem';
@@ -35,7 +35,7 @@ function updateSidebarState() {
         sidebar.classList.remove('sidebar-collapsed');
         btnContainer.classList.remove('collapsed');
         bottomBar.classList.remove('sidebar-collapsed');
-        
+
         if (isMobile) {
             bottomBar.style.bottom = `calc(${sidebarHeight} + 1rem)`;
             btnContainer.style.bottom = `calc(${sidebarHeight} + 1rem)`;
@@ -51,7 +51,7 @@ function generateLocationList() {
         console.error('location-list element not found');
         return;
     }
-    
+
     listContainer.innerHTML = '';
 
     if (!CONFIG.locations || CONFIG.locations.length === 0) {
@@ -69,7 +69,7 @@ function generateLocationList() {
         } else {
             item.style.padding = '0.6rem 0.75rem';
         }
-        
+
         item.innerHTML = `
             <div class="relative flex-shrink-0" style="width: 12px; height: 12px;">
                 <div class="w-3 h-3 bg-white rounded-full shadow-[0_0_8px_rgba(255,255,255,0.8)]"></div>
@@ -91,7 +91,7 @@ function generateLocationList() {
             if (window.myChart) {
                 window.myChart.setOption({ geo: { center: loc.value, zoom: 2 } });
             }
-            
+
             if (window.innerWidth <= 1024 && !isSidebarCollapsed) {
                 toggleSidebar();
             }
@@ -99,7 +99,7 @@ function generateLocationList() {
 
         listContainer.appendChild(item);
     });
-    
+
     console.log(`Generated ${CONFIG.locations.length} location items`);
 }
 
@@ -126,7 +126,7 @@ function updateStats() {
 function initSidebar() {
     const sidebar = document.getElementById('sidebar');
     if (!sidebar) return;
-    
+
     isSidebarCollapsed = false;
     updateSidebarState();
 }
@@ -137,30 +137,53 @@ window.addEventListener('resize', () => {
 
 let touchStartY = 0;
 let touchEndY = 0;
+let isScrolling = false;  // 新增：标记是否正在滚动
 
 document.addEventListener('DOMContentLoaded', () => {
     const sidebar = document.getElementById('sidebar');
-    
+    const locationList = document.getElementById('location-list');
+
     initSidebar();
-    
+
     if (sidebar) {
         sidebar.addEventListener('touchstart', (e) => {
             touchStartY = e.changedTouches[0].screenY;
+            isScrolling = false;  // 重置滚动标记
+        }, { passive: true });
+
+        sidebar.addEventListener('touchmove', (e) => {
+            isScrolling = true;  // 标记正在滚动
         }, { passive: true });
 
         sidebar.addEventListener('touchend', (e) => {
             touchEndY = e.changedTouches[0].screenY;
-            handleSwipe();
+            // 只有在非滚动状态下才处理滑动关闭
+            if (!isScrolling) {
+                handleSwipe();
+            }
+            isScrolling = false;
+        }, { passive: true });
+    }
+
+    // 为列表添加滚动事件监听，阻止事件冒泡到 sidebar
+    if (locationList) {
+        locationList.addEventListener('scroll', (e) => {
+            e.stopPropagation();
+        }, { passive: true });
+
+        locationList.addEventListener('touchmove', (e) => {
+            e.stopPropagation();  // 阻止滚动事件冒泡到 sidebar
         }, { passive: true });
     }
 });
 
 function handleSwipe() {
     if (window.innerWidth > 1024) return;
-    
+
     const swipeThreshold = 50;
     const diff = touchEndY - touchStartY;
-    
+
+    // 只有向下滑动超过阈值且侧边栏展开时才关闭
     if (diff > swipeThreshold && !isSidebarCollapsed) {
         toggleSidebar();
     }
