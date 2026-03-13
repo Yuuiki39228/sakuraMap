@@ -148,7 +148,7 @@ const CONFIG = {
                         frequency: "1~15min（根据当日上刊数决定）"
                     },
                     {
-                        name: "合肥融创茂",
+                        name: "合肥融创茂（3.19-3.20）",
                         address: "庐州大道800号(万年埠地铁站1口步行410米)",
                         value: [117.304169, 31.703175],
                         screenCount: 1,
@@ -175,7 +175,7 @@ const CONFIG = {
                         frequency: "12min"
                     },
                     {
-                        name: "福州乐堤港·东百仓山店",
+                        name: "福州乐堤港·东百仓山店（3.19-3.21）",
                         address: "福建省福州市仓山区-金山街道浦上大道198号",
                         value: [119.279307, 26.040799],
                         screenCount: 5,
@@ -202,7 +202,7 @@ const CONFIG = {
                         frequency: "480s一次"
                     },
                     {
-                        name: "福州万象九宜城",
+                        name: "福州万象九宜城（3.19-3.20）",
                         address: "西环中路691号万象城3层",
                         value: [119.290545, 26.064211],
                         screenCount: 1,
@@ -283,7 +283,7 @@ const CONFIG = {
                         frequency: "15分钟内"
                     },
                     {
-                        name: "南宁市青秀万达广场",
+                        name: "南宁市青秀万达广场（3.19-3.20）",
                         address: "广西南宁市青秀区-东葛路118号",
                         value: [108.370451, 22.83041],
                         screenCount: 1,
@@ -305,9 +305,9 @@ const CONFIG = {
                         address: "新添大道南段302号(顺海地铁站C口步行230米)",
                         value: [106.743329, 26.619763],
                         screenCount: 1,
-                        screenLocations: ["NULL"],
-                        playTime: "NULL",
-                        frequency: "NULL"
+                        screenLocations: ["3号门"],
+                        playTime: "10:00-22:00",
+                        frequency: "10分钟轮播（以当日上刊数量为准）"
                     },
                     {
                         name: "贵阳龙湾万达广场",
@@ -346,7 +346,7 @@ const CONFIG = {
                         frequency: "1分钟一次"
                     },
                     {
-                        name: "邯郸悦然广场",
+                        name: "邯郸悦然广场（3.19-3.20）",
                         address: "邯郸市邯山区中华大街与南环路交叉口",
                         value: [114.490871, 36.565387],
                         screenCount: 1,
@@ -490,7 +490,7 @@ const CONFIG = {
                         frequency: "NULL"
                     },
                     {
-                        name: "武汉汉阳万达广场",
+                        name: "武汉汉阳万达广场（3.19-3.21）",
                         address: "湖北省武汉市汉阳区四新大道608号汉阳万达广场",
                         value: [114.199643, 30.531111],
                         screenCount: 2,
@@ -530,9 +530,9 @@ const CONFIG = {
                         address: "高新区东风汽车大道特28号",
                         value: [112.190669, 32.121718],
                         screenCount: 1,
-                        screenLocations: ["NULL"],
-                        playTime: "NULL",
-                        frequency: "NULL"
+                        screenLocations: ["中庭大屏"],
+                        playTime: "9:30-21:40",
+                        frequency: "约6分钟1次"
                     },
                     {
                         name: "长沙开福万达广场",
@@ -544,7 +544,7 @@ const CONFIG = {
                         frequency: "240s一轮"
                     },
                     {
-                        name: "长沙MCC-麻石公园",
+                        name: "长沙MCC-麻石公园（3.19-3.21）",
                         address: "长沙市芙蓉北大道333号",
                         value: [112.908552, 28.368338],
                         screenCount: 1,
@@ -553,7 +553,7 @@ const CONFIG = {
                         frequency: "100次/天"
                     },
                     {
-                        name: "株洲大汉悦中心",
+                        name: "株洲大汉悦中心（3.19-3.20）",
                         address: "株洲市芦淞区七一路229号",
                         value: [113.149145, 27.837958],
                         screenCount: 2,
@@ -601,8 +601,8 @@ const CONFIG = {
                         name: "南昌百盛购物中心",
                         address: "江西省南昌市东湖区中山路177号",
                         value: [115.891407, 28.676476],
-                        screenCount: 2,
-                        screenLocations: ["B馆外围", "A馆内屏"],
+                        screenCount: 3,
+                        screenLocations: ["B馆负二电子屏", "A馆内屏","B馆外围（待定）"],
                         playTime: "10:00-22:00",
                         frequency: "5分钟"
                     },
@@ -620,8 +620,8 @@ const CONFIG = {
                         address: "中山路1号(八一广场地铁站5口旁)",
                         value: [115.902659, 28.67602],
                         screenCount: 1,
-                        screenLocations: ["NULL"],
-                        playTime: "NULL",
+                        screenLocations: ["东门外立面大屏"],
+                        playTime: "10:00-22:00",
                         frequency: "NULL"
                     },
                     {
@@ -629,8 +629,8 @@ const CONFIG = {
                         address: "人民大街155号(长春站北地铁站F口旁)",
                         value: [125.321631, 43.914894],
                         screenCount: 1,
-                        screenLocations: ["NULL"],
-                        playTime: "NULL",
+                        screenLocations: ["1号门中厅曲面屏"],
+                        playTime: "9:30-21:30",
                         frequency: "NULL"
                     },
                     {
@@ -670,7 +670,7 @@ const CONFIG = {
                         frequency: "10分钟左右一轮（以当天数量为准）"
                     },
                     {
-                        name: "抚顺新抚万达广场",
+                        name: "抚顺新抚万达广场（3.19-3.21）",
                         address: "辽宁省抚顺市新抚区浑河南路中段56号",
                         value: [123.901996, 41.865355],
                         screenCount: 1,
@@ -679,12 +679,12 @@ const CONFIG = {
                         frequency: "NULL"
                     },
                     {
-                        name: "大连普兰万达广场",
-                        address: "大连市普兰店振兴街",
-                        value: [121.940027, 39.402079],
+                        name: "大连甘井子万达广场",
+                        address: "虹韵路6号(虹锦路地铁站A口步行580米)",
+                        value: [121.54,38.95],
                         screenCount: 1,
-                        screenLocations: ["NULL"],
-                        playTime: "NULL",
+                        screenLocations: ["1号门外广场"],
+                        playTime: "9:30—21:30",
                         frequency: "NULL"
                     },
                     {
@@ -773,18 +773,18 @@ const CONFIG = {
                         address: "济宁汽车北站南侧",
                         value: [116.596637, 35.426337],
                         screenCount: 1,
-                        screenLocations: ["NULL"],
-                        playTime: "NULL",
-                        frequency: "NULL"
+                        screenLocations: ["3号门外广场"],
+                        playTime: "9:30-21:00",
+                        frequency: "6分钟一次"
                     },
                     {
                         name: "东营西城万达广场",
                         address: "北一路730号(与千佛山路交汇处西南角)",
                         value: [118.541193, 37.457168],
                         screenCount: 1,
-                        screenLocations: ["NULL"],
-                        playTime: "NULL",
-                        frequency: "NULL"
+                        screenLocations: ["一号门东圆亭三角大屏"],
+                        playTime: "早上十点",
+                        frequency: "十分钟以内"
                     },
                     {
                         name: "青岛书院万达广场",
@@ -859,7 +859,7 @@ const CONFIG = {
                         frequency: "3分钟"
                     },
                     {
-                        name: "乌鲁木齐高新万达广场",
+                        name: "乌鲁木齐高新万达广场（3.16-3.22）",
                         address: "新疆维吾尔自治区乌鲁木齐长春北路668号",
                         value: [87.572031, 43.910667],
                         screenCount: 1,
@@ -868,7 +868,7 @@ const CONFIG = {
                         frequency: "30秒轮播"
                     },
                     {
-                        name: "喀什东城万达广场",
+                        name: "喀什东城万达广场（3.19-3.20）",
                         address: "新疆喀什万达广场位于多来特巴格路与新城南路交叉路口",
                         value: [76.029716, 39.44816],
                         screenCount: 1,
@@ -894,7 +894,7 @@ const CONFIG = {
                         frequency: "5分钟"
                     },
                     {
-                        name: "杭州湖滨88",
+                        name: "杭州湖滨88（3.19-3.23）",
                         address: "浙江省杭州市上城区平海路124号湖滨88",
                         value: [120.16245, 30.25471],
                         screenCount: 5,
@@ -955,6 +955,15 @@ const CONFIG = {
                         screenLocations: ["2号门外广场"],
                         playTime: "10:00-22:00",
                         frequency: "240s(4分钟)一轮"
+                    },
+                    {
+                        name: "南阳玉都万达广场",
+                        address: "孔明大道与医圣祠路交叉口",
+                        value: [112.58,32.99],
+                        screenCount: 1,
+                        screenLocations: ["商场1号门外大屏"],
+                        playTime: "9:00-11:00 15:00-19:00",
+                        frequency: "4分钟"
                     }
                 ],
 
